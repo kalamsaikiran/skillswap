@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Settings, Book, Users, Star, Award, Clock, MapPin } from 'lucide-react';
+import { User, Settings, Book, Users, Star, Clock, MapPin } from 'lucide-react';
 
 interface Skill {
   name: string;
@@ -41,7 +41,7 @@ interface ProfileStats {
 export default function Profile() {
   const { user, isAuthenticated } = useAuth();
   const currentUserId = (user as { id?: string; _id?: string } | null)?.id || (user as { id?: string; _id?: string } | null)?._id;
-  const [connections, setConnections] = useState<Connection[]>([]);
+  const [, setConnections] = useState<Connection[]>([]);
   const [exchanges, setExchanges] = useState<Exchange[]>([]);
   const [stats, setStats] = useState<ProfileStats>({
     totalConnections: 0,

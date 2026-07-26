@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { UserPlus, Mail, X, Check, Star, MapPin, Clock } from 'lucide-react';
+import { UserPlus, Mail, Check, Star, MapPin, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface Skill {

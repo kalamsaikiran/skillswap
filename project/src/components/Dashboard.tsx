@@ -1,18 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { MessageSquare, Repeat, TrendingUp, User, LogOut, Bell, X } from 'lucide-react';
 import Toast from './Toast';
-
-interface Skill {
-  name: string;
-  level: string;
-  category: string;
-}
-
-interface Interest {
-  name: string;
-}
 
 interface Notification {
   _id: string;
@@ -28,21 +18,6 @@ interface ToastMessage {
   message: string;
   type: 'success' | 'error' | 'info';
 }
-
-// Add this CSS at the top of your component
-const notificationStyles = {
-  pulse: {
-    animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-  },
-  '@keyframes pulse': {
-    '0%, 100%': {
-      opacity: 1,
-    },
-    '50%': {
-      opacity: 0.5,
-    },
-  },
-};
 
 export default function Dashboard() {
   const { user, logout } = useAuth();

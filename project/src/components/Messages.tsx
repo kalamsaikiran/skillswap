@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Send, User } from 'lucide-react';
 import io from 'socket.io-client';
-import { Socket } from 'socket.io-client';
 
 interface Message {
   _id: string;

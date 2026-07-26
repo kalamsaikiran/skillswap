@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Search, MessageSquare, Users, ArrowRight } from 'lucide-react';
 import Signup from './Signup';
 import { useAuth } from '../context/AuthContext';
@@ -7,17 +7,7 @@ import { useAuth } from '../context/AuthContext';
 export default function LandingPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSignup, setShowSignup] = useState(false);
-  const { currentUser, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/');
-    } catch (error) {
-      console.error('Failed to log out:', error);
-    }
-  };
+  const { currentUser } = useAuth();
 
   return (
     <div className="min-h-screen bg-gray-50">

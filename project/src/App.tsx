@@ -1,14 +1,9 @@
-import React, { useState } from 'react';
-import { Routes, Route, Navigate, Link } from 'react-router-dom';
-import { ArrowRightCircle, Code, Dumbbell, MessageSquare, PenTool, Repeat, Search, Utensils, X } from 'lucide-react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx';
 import Dashboard from './components/Dashboard';
 import Connect from './components/Connect.tsx';
 import Exchange from './components/Exchange.tsx';
-import Home from './components/Home.jsx';
 import Login from './components/Login.tsx';
-import Signup from './components/Signup.tsx';
-import Welcome from './components/Welcome.tsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import Grow from './components/Grow.tsx';
 import Profile from './components/Profile.tsx';
@@ -17,58 +12,6 @@ import Messages from './components/Messages';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Register from './components/Register';
-
-interface AuthModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  type: 'signin' | 'signup';
-}
-
-function AuthModal({ isOpen, onClose, type }: AuthModalProps) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    skills: [] as string[],
-    interests: [] as string[],
-  });
-  const { login, signup } = useAuth();
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [newSkill, setNewSkill] = useState('');
-  const [newInterest, setNewInterest] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
-
-    try {
-      if (type === 'signin') {
-        await login(formData.email, formData.password);
-        onClose();
-      } else {
-        await signup(formData.name, formData.email, formData.password, formData.skills, formData.interests);
-        onClose();
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // ... rest of AuthModal implementation ...
-  // (keeping all the UI components and handlers)
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 relative max-h-[90vh] overflow-y-auto">
-        {/* ... rest of AuthModal UI ... */}
-      </div>
-    </div>
-  );
-}
 
 function AppContent() {
   const { isAuthenticated, loading } = useAuth();

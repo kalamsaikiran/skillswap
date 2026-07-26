@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { ArrowRight, Clock, CheckCircle, XCircle, Search, Filter, MapPin, Star, User, AlertCircle, Video, MessageSquare } from 'lucide-react';
+import { ArrowRight, Clock, XCircle, Search, Filter, MapPin, Star, User, AlertCircle, Video, MessageSquare } from 'lucide-react';
 import io from 'socket.io-client';
 
 interface Notification {
@@ -70,16 +70,6 @@ interface PaginationState {
 // Add interface for fetch options
 interface FetchOptions extends RequestInit {
   headers?: Record<string, string>;
-}
-
-interface ErrorState {
-  exchanges: string | null;
-  partners: string | null;
-  categories: string | null;
-  createExchange: string | null;
-  skill: string | null;
-  duration: string | null;
-  meetingLink: string | null;
 }
 
 interface NewExchange {
@@ -488,18 +478,6 @@ function Exchange() {
     };
   }, [searchTimeout]);
 
-  const generateMeetingLink = async () => {
-    try {
-      // In a real implementation, you would call the Google Meet API here
-      // For now, we'll generate a random meeting ID
-      const meetingId = Math.random().toString(36).substring(2, 15);
-      return `https://meet.google.com/${meetingId}`;
-    } catch (error) {
-      console.error('Error generating meeting link:', error);
-      throw error;
-    }
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
@@ -660,19 +638,6 @@ function Exchange() {
       return { ...prev, partner: partner._id };
     });
     fetchPartnerDetails(partner._id);
-  };
-
-  // Memoize the filtered partners to prevent unnecessary re-renders
-  const filteredPartners = useMemo(() => {
-    return partners.filter(partner =>
-      partner.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-      partner.skills.some(skill => skill.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
-    );
-  }, [partners, debouncedSearchTerm]);
-
-  // Update the skill input to show partner's skills in a dropdown
-  const handleSkillSelect = (skill: string) => {
-    setNewExchange(prev => ({ ...prev, skill }));
   };
 
   // Add pagination controls
