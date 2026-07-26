@@ -72,6 +72,7 @@ router.post('/register', async (req, res) => {
           token,
           userId: user.id,
           user: {
+            id: user.id,
             _id: user.id,
             name: user.name,
             email: user.email,
@@ -84,6 +85,13 @@ router.post('/register', async (req, res) => {
     );
   } catch (err) {
     console.error('Registration error:', err);
+
+    if (err.code === 11000) {
+      return res.status(400).json({
+        message: 'An account with this email already exists'
+      });
+    }
+
     res.status(500).json({ 
       message: 'Server error during registration',
       error: err.message 

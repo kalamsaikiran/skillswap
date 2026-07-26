@@ -40,6 +40,7 @@ interface ProfileStats {
 
 export default function Profile() {
   const { user, isAuthenticated } = useAuth();
+  const currentUserId = (user as { id?: string; _id?: string } | null)?.id || (user as { id?: string; _id?: string } | null)?._id;
   const [connections, setConnections] = useState<Connection[]>([]);
   const [exchanges, setExchanges] = useState<Exchange[]>([]);
   const [stats, setStats] = useState<ProfileStats>({
@@ -55,7 +56,7 @@ export default function Profile() {
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      if (!isAuthenticated || !user?.id) return;
+      if (!isAuthenticated || !currentUserId) return;
 
       try {
         setLoading(true);
@@ -111,7 +112,7 @@ export default function Profile() {
     };
 
     fetchProfileData();
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, currentUserId, user]);
 
   if (!isAuthenticated) {
     return (

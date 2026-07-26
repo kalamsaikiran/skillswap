@@ -15,6 +15,7 @@ const notificationRoutes = require('./routes/notificationRoutes');
 
 // Load environment variables
 dotenv.config();
+process.env.JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
 
 const app = express();
 const server = http.createServer(app);
@@ -109,7 +110,22 @@ io.on('connection', (socket) => {
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/skillswap')
-  .then(() => console.log('Connected to MongoDB'))
+  .then(async () => {
+    console.log('Connected to MongoDB');
+
+    try {
+      const usersCollection = mongoose.connection.db.collection('users');
+      const indexes = await usersCollection.listIndexes().toArray();
+      const staleUsernameIndex = indexes.find(index => index.name === 'username_1');
+
+      if (staleUsernameIndex) {
+        await usersCollection.dropIndex('username_1');
+        console.log('Dropped stale unique username index from users collection');
+      }
+    } catch (indexError) {
+      console.error('Could not inspect or clean user indexes:', indexError);
+    }
+  })
   .catch(err => console.error('MongoDB connection error:', err));
 
 // Routes

@@ -5,6 +5,22 @@ const API_BASE_URL = 'http://localhost:5001';
 
 const AuthContext = createContext();
 
+const normalizeUser = (userData) => {
+  if (!userData) return null;
+
+  const normalizedUser = {
+    ...userData,
+    id: userData.id || userData._id || userData.userId || null,
+    _id: userData._id || userData.id || userData.userId || null,
+  };
+
+  if (!normalizedUser.id && normalizedUser._id) {
+    normalizedUser.id = normalizedUser._id;
+  }
+
+  return normalizedUser;
+};
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,7 +33,8 @@ export function AuthProvider({ children }) {
     const userData = localStorage.getItem('user');
 
     if (token && userData) {
-      setUser(JSON.parse(userData));
+      const parsedUser = JSON.parse(userData);
+      setUser(normalizeUser(parsedUser));
     }
     setLoading(false);
   }, []);
@@ -63,10 +80,11 @@ export function AuthProvider({ children }) {
 
       console.log('User data received:', userData);
       
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
+      const normalizedUser = normalizeUser(userData);
+      setUser(normalizedUser);
+      localStorage.setItem('user', JSON.stringify(normalizedUser));
 
-      return userData;
+      return normalizedUser;
     } catch (err) {
       console.error('Login error:', err);
       setError(err.message);
@@ -108,8 +126,9 @@ export function AuthProvider({ children }) {
       localStorage.setItem('token', data.token);
       
       // Set user data from the response
-      setUser(data.user);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      const normalizedUser = normalizeUser(data.user);
+      setUser(normalizedUser);
+      localStorage.setItem('user', JSON.stringify(normalizedUser));
 
       // Navigate to dashboard after successful signup
       navigate('/dashboard');

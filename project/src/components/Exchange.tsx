@@ -137,6 +137,7 @@ export default function ExchangeWithErrorBoundary() {
 
 function Exchange() {
   const { user, isAuthenticated } = useAuth();
+  const currentUserId = (user as { id?: string; _id?: string } | null)?.id || (user as { id?: string; _id?: string } | null)?._id;
   const [exchanges, setExchanges] = useState<Exchange[]>([]);
   const [loading, setLoading] = useState({
     exchanges: true,
@@ -273,7 +274,7 @@ function Exchange() {
   };
 
   const fetchExchanges = useCallback(async () => {
-    if (!user?.id) return;
+    if (!currentUserId) return;
 
     try {
       setLoading(prev => ({ ...prev, exchanges: true }));
@@ -369,7 +370,7 @@ function Exchange() {
   }, []);
 
   const fetchRequests = useCallback(async () => {
-    if (!user?.id) return;
+    if (!currentUserId) return;
 
     try {
       const data = await fetchData('http://localhost:5001/api/exchanges');
@@ -381,7 +382,7 @@ function Exchange() {
         // 2. requestStatus is pending
         // 3. status is pending
         const pendingRequests = data.filter(exchange => 
-          exchange.partner._id === user.id && 
+          exchange.partner._id === currentUserId && 
           exchange.requestStatus === 'pending' &&
           exchange.status === 'pending'
         );
@@ -398,7 +399,7 @@ function Exchange() {
   }, [user?.id]);
 
   const fetchNotifications = useCallback(async () => {
-    if (!user?.id) return;
+    if (!currentUserId) return;
 
     try {
       const exchanges = await fetchData('http://localhost:5001/api/exchanges');
@@ -412,7 +413,7 @@ function Exchange() {
 
       const userNotifications = exchanges.flatMap(exchange => 
         exchange.notifications.filter((notification: Notification) => 
-          notification.recipient === user.id && !notification.read
+          notification.recipient === currentUserId && !notification.read
         )
       );
 
@@ -448,10 +449,10 @@ function Exchange() {
     let mounted = true;
 
     const fetchAllData = async () => {
-      if (!isAuthenticated || !user?.id || !mounted) return;
+      if (!isAuthenticated || !currentUserId || !mounted) return;
 
       try {
-        console.log('Fetching exchange data for user:', user.id);
+        console.log('Fetching exchange data for user:', currentUserId);
         await Promise.all([
           fetchExchanges(),
           fetchPartners(),
@@ -471,7 +472,7 @@ function Exchange() {
     };
   }, [
     isAuthenticated,
-    user?.id,
+    currentUserId,
     fetchExchanges,
     fetchPartners,
     fetchCategories,

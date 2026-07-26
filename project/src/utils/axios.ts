@@ -1,4 +1,5 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios from "axios";
+import type { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 
 // Create an axios instance with custom config
 const instance = axios.create({
@@ -35,4 +36,4 @@ instance.interceptors.response.use(
   }
 );
 
-export default instance; 
+export default instance;
